@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFireAuth } from 'angularfire2/auth';
 import { usercreds } from '../../models/interfaces/usercreds';
+import { ToastController } from 'ionic-angular';
 
 /*
   Generated class for the AuthProvider provider.
@@ -11,7 +12,7 @@ import { usercreds } from '../../models/interfaces/usercreds';
 @Injectable()
 export class AuthProvider {
   
-  constructor(public afireauth: AngularFireAuth) {
+  constructor(public afireauth: AngularFireAuth, public toastCtrl: ToastController) {
 
   }
 
@@ -21,11 +22,16 @@ export class AuthProvider {
 */  
   
   login(credentials: usercreds) {
+    var toaster = this.toastCtrl.create({
+      duration: 3000,
+      position: 'bottom'
+    });
     var promise = new Promise((resolve, reject) => {
       this.afireauth.auth.signInWithEmailAndPassword(credentials.email, credentials.password).then(() => {
         resolve(true);
       }).catch((err) => {
-        reject(err);
+        toaster.setMessage(err.message);
+        toaster.present();
        })
     })
 

@@ -1,12 +1,10 @@
 page-login {
     .background {
-        background-image: url('<yoururlhere>');
+        background-image: url('https://dreamsky10.com/wp-content/uploads/2017/07/Iphone-backgrounds-mobile-screen-background-wallpaper-hd-by-md.sopon1_.jpg');
     }
     .scroll-content {
         align-content: center;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+         transform: translateX(0%) translateY(20%);
         text-align: center;
     }
     ion-card.card {
@@ -60,7 +58,7 @@ page-login {
     }
     
     .input-cover {
-    position: static;
+        position: static;
     }
     
     }

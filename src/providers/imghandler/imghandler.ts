@@ -3,12 +3,7 @@ import { File } from '@ionic-native/file';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { FilePath } from '@ionic-native/file-path';
 import firebase from 'firebase';
-/*
-  Generated class for the ImghandlerProvider provider.
 
-  See https://angular.io/docs/ts/latest/guide/dependency-injection.html
-  for more info on providers and Angular 2 DI.
-*/
 @Injectable()
 export class ImghandlerProvider {
   nativepath: any;
@@ -45,6 +40,5 @@ export class ImghandlerProvider {
     })    
      return promise;   
   }
-  
 
 }

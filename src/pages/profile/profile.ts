@@ -41,6 +41,7 @@ export class ProfilePage {
     });
     this.imghandler.uploadimage().then((url: any) => {
       this.userservice.updateimage(url).then((res: any) => {
+        console.log(res);
         if (res.success) {
           statusalert.setTitle('Updated');
           statusalert.setSubTitle('Your profile pic has been changed successfully!!');

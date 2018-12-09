@@ -16,6 +16,8 @@ import { LoginPage } from '../pages/login/login';
 import { LoginPageModule } from '../pages/login/login.module';
 import { ImghandlerProvider } from '../providers/imghandler/imghandler';
 import { FileChooser } from '@ionic-native/file-chooser';
+import { RequestsProvider } from '../providers/requests/requests';
+import { ChatProvider } from '../providers/chat/chat';
 
 @NgModule({
   declarations: [
@@ -41,7 +43,9 @@ import { FileChooser } from '@ionic-native/file-chooser';
     AngularFireAuth,
     UserProvider,
     ImghandlerProvider,
-    FileChooser
+    FileChooser,
+    RequestsProvider,
+    ChatProvider
   ]
 })
 export class AppModule {}
