@@ -4,27 +4,44 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 
+import { config } from './app.firebaseconfig';
+
+import { AngularFireAuth } from 'angularfire2/auth';
+import { AngularFireModule } from 'angularfire2';
+
 import { MyApp } from './app.component';
-import { HomePage } from '../pages/home/home';
+import { AuthProvider } from '../providers/auth/auth';
+import { UserProvider } from '../providers/user/user';
+import { LoginPage } from '../pages/login/login';
+import { LoginPageModule } from '../pages/login/login.module';
+import { ImghandlerProvider } from '../providers/imghandler/imghandler';
+import { FileChooser } from '@ionic-native/file-chooser';
 
 @NgModule({
   declarations: [
     MyApp,
-    HomePage
   ],
   imports: [
     BrowserModule,
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp, {tabsPlacement: 'top'}),
+    AngularFireModule.initializeApp(config),
+    LoginPageModule
+    
   ],
   bootstrap: [IonicApp],
   entryComponents: [
     MyApp,
-    HomePage
+    LoginPage
   ],
   providers: [
     StatusBar,
     SplashScreen,
-    {provide: ErrorHandler, useClass: IonicErrorHandler}
+    {provide: ErrorHandler, useClass: IonicErrorHandler},
+    AuthProvider,
+    AngularFireAuth,
+    UserProvider,
+    ImghandlerProvider,
+    FileChooser
   ]
 })
 export class AppModule {}
