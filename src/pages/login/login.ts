@@ -23,6 +23,10 @@ export class LoginPage {
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad LoginPage');
+    var count = 1;
+    for(var _i = 3585; _i < 3674; _i++) {
+      console.log(_i + " " + String.fromCharCode(_i) + count++)
+    }
   }
 
   signin() {
