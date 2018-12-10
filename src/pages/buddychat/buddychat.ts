@@ -19,8 +19,10 @@ export class BuddychatPage {
   newmessage;
   allmessages = [];
   photoURL;
+  timer = 10;
   constructor(public navCtrl: NavController, public navParams: NavParams, public chatservice: ChatProvider,
               public events: Events, public zone: NgZone) {
+    
     this.buddy = this.chatservice.buddy;
     this.photoURL = firebase.auth().currentUser.photoURL;
     this.scrollto();
@@ -28,12 +30,61 @@ export class BuddychatPage {
       this.allmessages = [];
       this.zone.run(() => {
         this.allmessages = this.chatservice.buddymessages;
+        
+        console.log(this.allmessages)
         this.decryptViginere(this.allmessages);
+        for (var key in this.allmessages) {
+          var d = new Date(this.allmessages[key].timestamp);
+          var hours = d.getHours();
+          var minutes = "0" + d.getMinutes();
+          var month = d.getMonth();
+          var da = d.getDate();
+          
+          var monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
+            "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+          
+            
+          var formattedTime = monthNames[month] + "-" + da + "-" + hours + ":" + minutes.substr(-2);
+          this.allmessages[key].timestamp = formattedTime;
+          
+        
+          this.allmessages[key].messageexpiredReal = this.allmessages[key].messageexpired;
+
+          setInterval(function () {
+            var currentTime = new Date();
+            console.log(Math.floor(((this.allmessages[key].messageexpiredReal - currentTime.getTime() )/ 1000)));
+
+            this.allmessages[key].countdown = Math.floor(((this.allmessages[key].messageexpiredReal - currentTime.getTime() )/ 1000));
+          }.bind(this), 1000)
+          
+          var d2 = new Date(this.allmessages[key].messageexpired);
+          var hours2 = d2.getHours();
+          var minutes2 = "0" + d2.getMinutes();
+          var month2 = d2.getMonth();
+          var da2 = d2.getDate();
+          var formattedTime2 = monthNames[month2] + "-" + da2 + "-" + hours2 + ":" + minutes2.substr(-2);
+          this.allmessages[key].messageexpired = formattedTime2;
+
+          var currentTime2 = new Date();
+          if (this.allmessages[key].messageexpiredReal - currentTime2.getTime() < 0) {
+            this.allmessages[key].isexpired = true;
+          }
+          else {
+            this.allmessages[key].isexpired = false;
+          }
+        }
       })
       
     })
   }
-
+  startTimer(messageexpired) {
+    setInterval(function () {
+      var currentTime = new Date();
+      console.log(messageexpired - currentTime.getTime());
+      return messageexpired - currentTime.getTime();
+       
+    }.bind(this), 1000)
+  }
   addmessage() {
     let encrypted = this.encryptViginere(this.newmessage);
     // สร้างฟังก์ชั่น เข้ารหัสที่นี้นะ
@@ -59,9 +110,6 @@ export class BuddychatPage {
         if (keyAt > key.length)  {
           keyAt = 0;
         }
-        console.log("L is " + (key.charCodeAt(keyAt) - 32));
-        console.log("เ is " + (newmessage.charCodeAt(_i) ));
-        console.log(String.fromCharCode(3603));
         messageEncrypt += String.fromCharCode((((newmessage.charCodeAt(_i) - 3585) + (key.charCodeAt(keyAt) - 32)) % 89) + 3585);
       }
     }
@@ -88,20 +136,16 @@ export class BuddychatPage {
           if (keyAt >= key.length)  {
             keyAt = 0;
           }
-          // messageEncrypt += String.fromCharCode((((newmessage.charCodeAt(_i) - 3585) + key.charCodeAt(keyAt)) % 89) + 3585);
           if ((receivemessage[i].message.charCodeAt(j) - (key.charCodeAt(keyAt) - 32) < 3585)) {
             messageDecrypted += String.fromCharCode(receivemessage[i].message.charCodeAt(j) + 89 - (key.charCodeAt(keyAt) - 32));
-            console.log(key.charCodeAt(keyAt));
           }
           else {
             messageDecrypted += String.fromCharCode(receivemessage[i].message.charCodeAt(j) - (key.charCodeAt(keyAt) - 32));
-            console.log(key.charCodeAt(keyAt));
           }
         }
       }
       receivemessage[i].message = messageDecrypted;
     }
-    console.log(receivemessage);
     return receivemessage;
   }
 

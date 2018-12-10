@@ -22,17 +22,23 @@ export class ChatProvider {
   }
 
   addnewmessage(msg) {
+    var t = new Date();
+    t.setSeconds(t.getSeconds() + 30);
+    console.log(t.getTime());
     if (this.buddy) {
       var promise = new Promise((resolve, reject) => {
         this.firebuddychats.child(firebase.auth().currentUser.uid).child(this.buddy.uid).push({
           sentby: firebase.auth().currentUser.uid,
           message: msg,
-          timestamp: firebase.database.ServerValue.TIMESTAMP
+          timestamp: firebase.database.ServerValue.TIMESTAMP,
+          messageexpired: t.getTime()
+
         }).then(() => {
           this.firebuddychats.child(this.buddy.uid).child(firebase.auth().currentUser.uid).push({
             sentby: firebase.auth().currentUser.uid,
             message: msg,
-            timestamp: firebase.database.ServerValue.TIMESTAMP
+            timestamp: firebase.database.ServerValue.TIMESTAMP,
+            messageexpired: t.getTime()
           }).then(() => {
             resolve(true);
             })
